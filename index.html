@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLORA | Тансаг Цэцгийн Дэлгүүр 💐</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        .flower-card:hover img { transform: scale(1.08); }
+        .modal-content::-webkit-scrollbar { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.8s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#fffafa] text-gray-800">
+
+    <nav class="fixed w-full z-50 glass border-b border-pink-100">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                    <span class="text-white font-serif font-bold text-xl">F</span>
+                </div>
+                <h1 class="text-2xl font-serif font-bold text-gray-900 tracking-tighter">FLORA<span class="text-pink-500">.</span></h1>
+            </a>
+
+            <div class="hidden md:flex space-x-10 font-bold text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                <a href="#" class="hover:text-pink-500 transition">Нүүр</a>
+                <a href="#" onclick="openAboutModal(event)" class="hover:text-pink-500 transition">Бидний тухай</a>
+                <a href="#" onclick="openCheckOrderModal(event)" class="hover:text-pink-500 transition">Захиалга шалгах</a>
+            </div>
+
+            <div class="flex items-center">
+                <button onclick="submitOrder()" class="relative group flex items-center space-x-3 bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-pink-500 transition-all shadow-xl">
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center border-2 border-white font-bold">0</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Захиалга өгөх</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-black/30 z-10"></div>
+        <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1920" class="absolute inset-0 w-full h-full object-cover" alt="Banner">
+        <div class="relative z-20 text-center px-6 animate-fade">
+            <h2 class="font-serif text-5xl md:text-8xl mb-6 text-white italic drop-shadow-2xl">Сэтгэлээ цэцгээр...</h2>
+            <p class="text-lg md:text-xl text-white/90 mb-10 max-w-xl mx-auto font-light tracking-widest uppercase">Өдөр бүр шинэ, өдөр бүр тансаг</p>
+            <button class="bg-white text-gray-900 px-12 py-5 rounded-full font-bold hover:bg-pink-500 hover:text-white transition shadow-2xl uppercase text-[10px] tracking-[0.3em]">Цэцэгс үзэх</button>
+        </div>
+    </section>
+
+    <div class="container mx-auto px-6 py-24">
+        <div class="flex flex-col items-center mb-16">
+            <span class="text-pink-500 font-bold text-[10px] uppercase tracking-[0.4em] mb-4">Манай цуглуулга</span>
+            <h3 class="font-serif text-4xl text-gray-900 italic text-center">Шинэхэн Баглаанууд</h3>
+            <div class="w-12 h-[2px] bg-pink-200 mt-6"></div>
+        </div>
+        <div id="flowerList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+            </div>
+    </div>
+
+    <div id="aboutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div onclick="closeModal('aboutModal')" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-[3rem] p-12 max-w-2xl w-full shadow-2xl overflow-y-auto modal-content">
+            <h3 class="font-serif text-3xl text-gray-900 mb-8 italic text-center">Бидний түүх</h3>
+            <div class="space-y-6 text-gray-600 text-sm leading-relaxed">
+                <p>2016 оноос хойш бид Улаанбаатар хотынхоо хэрэглэгчдэд хамгийн шинэлэг, хамгийн гоёмсог цэцэгсийг хүргэсээр ирлээ. Бидний зорилго бол ердөө цэцэг зарах биш, таны хайртай хүндээ илгээж буй тэр нандин мэдрэмжийг бүрэн дүүрэн дамжуулах юм.</p>
+                <div class="grid grid-cols-2 gap-6 pt-4">
+                    <div class="bg-pink-50 p-6 rounded-[2rem]">
+                        <h4 class="font-bold text-pink-600 uppercase text-[10px] mb-2 tracking-widest">Чансаа</h4>
+                        <p class="text-[11px]">Өглөө бүр шинээр ирэх Голланд цэцэгс.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-[2rem]">
+                        <h4 class="font-bold text-gray-900 uppercase text-[10px] mb-2 tracking-widest">Хүргэлт</h4>
+                        <p class="text-[11px]">24/7 найдвартай, түргэн шуурхай үйлчилгээ.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeModal('aboutModal')" class="w-full mt-10 bg-gray-900 text-white py-5 rounded-full font-bold uppercase text-[10px] tracking-[0.2em]">Хаах</button>
+        </div>
+    </div>
+
+    <div id="deliveryModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div onclick="closeModal('deliveryModal')" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl">
+            <h3 class="font-serif text-3xl text-gray-900 mb-6 italic">Хүргэлтийн дүрэм</h3>
+            <div class="space-y-4 text-gray-500 text-xs leading-relaxed uppercase tracking-widest">
+                <p>• Төлбөр баталгаажсанаас хойш 2-4 цагт хүргэгдэнэ.</p>
+                <p>• 18:00-аас хойшхи захиалга дараа өдөр нь хүргэгдэнэ.</p>
+                <p>• Хүргэлтийн төлбөр бүсчлэлээс хамаарч бодогдоно.</p>
+            </div>
+            <button onclick="closeModal('deliveryModal')" class="w-full mt-10 bg-pink-500 text-white py-5 rounded-full font-bold uppercase text-[10px] tracking-widest">Ойлголоо</button>
+        </div>
+    </div>
+
+    <div id="serviceModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div onclick="closeModal('serviceModal')" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-[3rem] p-12 max-w-lg w-full shadow-2xl">
+            <h3 class="font-serif text-3xl text-gray-900 mb-6 italic">Үйлчилгээний журам</h3>
+            <div class="text-gray-500 text-xs leading-relaxed uppercase tracking-widest">
+                <p>Захиалгыг 24 цагийн өмнө цуцлах боломжтой. Цэцэг хүргэгдэхээр гарсан тохиолдолд буцаах боломжгүйг анхаарна уу.</p>
+            </div>
+            <button onclick="closeModal('serviceModal')" class="w-full mt-10 bg-gray-900 text-white py-5 rounded-full font-bold uppercase text-[10px] tracking-widest">Зөвшөөрч байна</button>
+        </div>
+    </div>
+
+    <div id="checkOrderModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div onclick="closeModal('checkOrderModal')" class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+        <div class="relative bg-white rounded-[3rem] p-12 max-w-md w-full shadow-2xl">
+            <h3 class="font-serif text-3xl text-gray-900 mb-8 italic text-center">Захиалга хайх</h3>
+            <div class="space-y-4">
+                <input type="number" id="searchOrderId" placeholder="Захиалгын дугаар (ID)" class="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-2 ring-pink-200 outline-none">
+                <input type="tel" id="searchPhone" placeholder="Утасны дугаар" class="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-2 ring-pink-200 outline-none">
+                <button onclick="fetchOrderStatus()" class="w-full bg-pink-500 text-white py-5 rounded-2xl font-bold uppercase text-[10px] tracking-widest hover:bg-gray-900 transition">Шалгах</button>
+            </div>
+            <div id="orderResult" class="mt-8 p-8 bg-pink-50 rounded-[2.5rem] hidden border border-pink-100 text-center animate-fade">
+                <p id="resStatus" class="text-pink-600 font-bold text-[10px] uppercase tracking-widest mb-2"></p>
+                <p id="resName" class="text-gray-900 font-serif text-xl"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-pink-100 pt-24 pb-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+                
+                <div>
+                    <h1 class="text-2xl font-serif font-bold text-pink-600 mb-6">FLORA.</h1>
+                    <p class="text-gray-400 text-[11px] leading-relaxed uppercase tracking-widest">
+                        Бид таны хайр, хүндэтгэл, талархлыг хамгийн тансаг цэцэгсээр илэрхийлдэг.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-[0.3em]">Мэдээлэл</h4>
+                    <ul class="space-y-4 text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                        <li><a href="#" onclick="openAboutModal(event)" class="hover:text-pink-500 transition">Бидний тухай</a></li>
+                        <li><a href="#" onclick="openModal('serviceModal', event)" class="hover:text-pink-500 transition">Үйлчилгээний нөхцөл</a></li>
+                        <li><a href="#" onclick="openModal('deliveryModal', event)" class="hover:text-pink-500 transition">Хүргэлтийн нөхцөл</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-[0.3em]">Холбоо барих</h4>
+                    <ul class="space-y-5">
+                        <li class="flex items-center space-x-4">
+                            <span class="w-10 h-10 bg-pink-50 rounded-xl flex items-center justify-center text-pink-500">📞</span>
+                            <span class="font-bold text-sm text-gray-900 tracking-tight">85570354</span>
+                        </li>
+                        <li class="flex items-center space-x-4">
+                            <span class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 font-bold text-[10px]">@</span>
+                            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-tighter">burenbayr272@gmail.com</span>
+                        </li>
+                    </ul>
+                    <div class="flex space-x-4 mt-8">
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition shadow-sm text-xs">FB</a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center hover:bg-gradient-to-tr from-orange-400 to-purple-600 hover:text-white transition shadow-sm text-xs">IG</a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-[0.3em]">Байршил</h4>
+                    <div class="rounded-[2rem] overflow-hidden h-32 w-full bg-gray-50 border border-gray-100 shadow-inner">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2673.80514101!2d106.917!3d47.918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDfCsDU1JzA0LjgiTiAxMDbCsDU1JzAxLjIiRQ!5e0!3m2!1smn!2smn!4v1" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-t border-gray-50 pt-10 flex flex-col md:row justify-between items-center text-[9px] text-gray-400 uppercase tracking-[0.3em] gap-6">
+                <p>© 2026 FLORA FLOWER SHOP. ALL RIGHTS RESERVED.</p>
+                <div class="flex items-center space-x-8">
+                    <a href="login.html" class="hover:text-pink-500 font-bold">Админ нэвтрэх</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        // Бүтээгдэхүүн ачаалах
+        async function loadProducts() {
+            try {
+                const res = await fetch('http://localhost:5000/api/products');
+                const products = await res.json();
+                const list = document.getElementById('flowerList');
+                list.innerHTML = '';
+                products.forEach(p => {
+                    list.innerHTML += `
+                        <div class="flower-card group bg-white rounded-[3rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-pink-50 animate-fade">
+                            <div class="relative overflow-hidden h-80">
+                                <img src="${p.main_image}" class="w-full h-full object-cover transition-transform duration-1000">
+                                <button onclick="addToCart(${p.id}, '${p.name_mn}', ${p.price})" 
+                                    class="absolute bottom-6 left-1/2 -translate-x-1/2 translate-y-24 group-hover:translate-y-0 bg-white text-gray-900 px-10 py-4 rounded-full font-bold text-[10px] uppercase shadow-2xl hover:bg-pink-500 hover:text-white transition-all duration-300 tracking-widest">
+                                    Сагслах +
+                                </button>
+                            </div>
+                            <div class="p-10 text-center">
+                                <h3 class="text-xl font-serif mb-2 italic">${p.name_mn}</h3>
+                                <p class="text-pink-500 font-bold text-lg tracking-wider">${Number(p.price).toLocaleString()} ₮</p>
+                            </div>
+                        </div>`;
+                });
+            } catch (err) { console.error("Ачаалахад алдаа гарлаа:", err); }
+        }
+
+        function addToCart(id, name, price) {
+            cart.push({ id, name, price });
+            document.getElementById('cartCount').innerText = cart.length;
+        }
+
+        async function submitOrder() {
+            if (cart.length === 0) return alert("Сагс хоосон байна!");
+            const name = prompt("Хүлээн авагчийн нэр:");
+            const phone = prompt("Холбоо барих утас:");
+            const address = prompt("Хүргэлтийн хаяг:");
+            
+            if (!name || !phone || !address) return alert("Захиалгын мэдээлэл дутуу байна!");
+            
+            const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+            
+            try {
+                const res = await fetch('http://localhost:5000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customer_name: name, phone, address, total_amount: total, items: cart })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert(`Баярлалаа! Таны захиалга бүртгэгдлээ. \nЗахиалгын дугаар: ${result.orderId}`);
+                    cart = [];
+                    document.getElementById('cartCount').innerText = "0";
+                }
+            } catch (err) { alert("Сервертэй холбогдоход алдаа гарлаа."); }
+        }
+
+        // Модал функцууд
+        function openModal(id, e) { 
+            if(e) e.preventDefault(); 
+            const m = document.getElementById(id); 
+            m.classList.remove('hidden'); 
+            m.classList.add('flex'); 
+        }
+        function closeModal(id) { 
+            const m = document.getElementById(id); 
+            m.classList.add('hidden'); 
+            m.classList.remove('flex'); 
+        }
+        function openAboutModal(e) { openModal('aboutModal', e); }
+        function openCheckOrderModal(e) { openModal('checkOrderModal', e); }
+
+        // Захиалга шалгах
+        async function fetchOrderStatus() {
+            const id = document.getElementById('searchOrderId').value;
+            const phone = document.getElementById('searchPhone').value;
+            if(!id || !phone) return alert("ID болон утасны дугаараа оруулна уу!");
+            
+            try {
+                const res = await fetch(`http://localhost:5000/api/orders/${id}?phone=${phone}`);
+                const data = await res.json();
+                if(data.success) {
+                    const resultDiv = document.getElementById('orderResult');
+                    resultDiv.classList.remove('hidden');
+                    document.getElementById('resStatus').innerText = `Төлөв: ${data.order.status}`;
+                    document.getElementById('resName').innerText = `${data.order.customer_name} - ${Number(data.order.total_amount).toLocaleString()} ₮`;
+                } else {
+                    alert("Захиалга олдсонгүй. Мэдээллээ шалгана уу.");
+                }
+            } catch (err) { alert("Алдаа гарлаа."); }
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

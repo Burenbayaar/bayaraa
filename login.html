@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ Нэвтрэх | FLORA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        body { font-family: 'Montserrat', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#fff5f6] flex items-center justify-center min-h-screen overflow-hidden">
+
+    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+        <div class="absolute top-10 left-10 w-64 h-64 bg-pink-400 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-pink-300 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative bg-white p-12 rounded-[3rem] shadow-[0_20px_50px_rgba(255,182,193,0.3)] w-[450px] max-w-[95vw] text-center border border-pink-100">
+        <div class="w-20 h-20 bg-pink-500 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-lg rotate-3 hover:rotate-0 transition-transform">
+            <span class="text-white text-4xl font-black">F</span>
+        </div>
+
+        <h2 class="text-3xl font-black text-gray-900 mb-2 tracking-tighter uppercase italic">Админ Нэвтрэх</h2>
+        <p class="text-gray-400 text-[10px] uppercase tracking-[0.3em] mb-10 font-bold">Flora Management System</p>
+
+        <div class="space-y-4">
+            <div class="text-left">
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-4 mb-1 block tracking-widest">
+                    Хэрэглэгчийн нэр
+                </label>
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Жишээ: admin"
+                    class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-pink-300 text-sm transition-all"
+                >
+            </div>
+
+            <div class="text-left">
+                <label class="text-[10px] font-bold text-gray-400 uppercase ml-4 mb-1 block tracking-widest">
+                    Нууц үг
+                </label>
+                <input
+                    type="password"
+                    id="passInput"
+                    placeholder="••••••••"
+                    class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-pink-300 text-sm transition-all"
+                >
+            </div>
+        </div>
+
+        <button
+            id="loginBtn"
+            type="button"
+            onclick="handleLogin()"
+            class="w-full mt-10 bg-gray-900 text-white py-5 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-pink-500 transition-all shadow-xl active:scale-95"
+        >
+            Системд нэвтрэх 🚀
+        </button>
+
+        <div id="statusArea" class="mt-6 min-h-[24px]">
+            <p id="errorMsg" class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden italic">
+                ! Мэдээлэл буруу байна
+            </p>
+            <p id="loadingMsg" class="text-pink-500 text-[10px] font-bold uppercase tracking-widest hidden animate-pulse">
+                Түр хүлээнэ үү...
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+
+        const userInput = document.getElementById('userInput');
+        const passInput = document.getElementById('passInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const loadingMsg = document.getElementById('loadingMsg');
+
+        async function handleLogin() {
+            const username = userInput.value.trim();
+            const password = passInput.value.trim();
+
+            if (!username || !password) {
+                alert('Нэр болон нууц үгээ оруулна уу!');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            loadingMsg.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                let data = {};
+                try {
+                    data = await res.json();
+                } catch {
+                    throw new Error('Серверээс буруу хариу ирлээ.');
+                }
+
+                if (res.ok && data.success) {
+                    localStorage.setItem('adminIn', 'true');
+                    window.location.href = 'admin.html';
+                    return;
+                }
+
+                errorMsg.classList.remove('hidden');
+            } catch (err) {
+                console.error('Сервертэй холбогдоход алдаа гарлаа:', err);
+                alert('Алдаа: Сервертэй холбогдож чадсангүй. Node index.js ажиллаж байгаа эсэхийг шалга.');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                loadingMsg.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+    </script>
+</body>
+</html>

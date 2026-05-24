@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ Панел | FLORA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (localStorage.getItem('adminIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-lg">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold">🌸 Цэцэг Нэмэх</h2>
+            <button
+                id="logoutBtn"
+                type="button"
+                class="bg-gray-800 text-white px-4 py-2 rounded-xl font-semibold hover:bg-black"
+            >
+                Гарах
+            </button>
+        </div>
+
+        <form id="fForm" class="space-y-4">
+            <input
+                type="text"
+                id="name"
+                placeholder="Нэр"
+                class="w-full p-3 border rounded-xl"
+                required
+            >
+
+            <input
+                type="number"
+                id="price"
+                placeholder="Үнэ"
+                class="w-full p-3 border rounded-xl"
+                required
+                min="0"
+            >
+
+            <select id="cat" class="w-full p-3 border rounded-xl" required>
+                <option value="">Категори сонгоно уу</option>
+            </select>
+
+            <textarea
+                id="desc"
+                placeholder="Тайлбар"
+                class="w-full p-3 border rounded-xl"
+                rows="4"
+            ></textarea>
+
+            <input
+                type="file"
+                id="img"
+                class="w-full"
+                accept="image/*"
+                required
+            >
+
+            <button
+                id="saveBtn"
+                type="submit"
+                class="w-full bg-pink-500 text-white py-3 rounded-xl font-bold hover:bg-pink-600"
+            >
+                Хадгалах
+            </button>
+
+            <p id="msg" class="text-sm font-medium hidden"></p>
+        </form>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+
+        const fForm = document.getElementById('fForm');
+        const nameInput = document.getElementById('name');
+        const priceInput = document.getElementById('price');
+        const catSelect = document.getElementById('cat');
+        const descInput = document.getElementById('desc');
+        const imgInput = document.getElementById('img');
+        const saveBtn = document.getElementById('saveBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const msg = document.getElementById('msg');
+
+        function showMessage(text, ok = false) {
+            msg.textContent = text;
+            msg.classList.remove('hidden', 'text-red-500', 'text-green-600');
+            msg.classList.add(ok ? 'text-green-600' : 'text-red-500');
+        }
+
+        async function loadCats() {
+            try {
+                const res = await fetch(`${API_BASE}/api/categories`);
+                if (!res.ok) {
+                    throw new Error('Категори татаж чадсангүй.');
+                }
+
+                const data = await res.json();
+
+                catSelect.innerHTML = '<option value="">Категори сонгоно уу</option>';
+
+                data.forEach((c) => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = c.name_mn;
+                    catSelect.appendChild(option);
+                });
+            } catch (err) {
+                console.error(err);
+                showMessage('Категори ачаалахад алдаа гарлаа.');
+            }
+        }
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('adminIn');
+            window.location.href = 'login.html';
+        });
+
+        fForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            msg.classList.add('hidden');
+
+            const name = nameInput.value.trim();
+            const price = priceInput.value.trim();
+            const desc = descInput.value.trim();
+            const categoryId = catSelect.value;
+            const imageFile = imgInput.files[0];
+
+            if (!name || !price || !categoryId || !imageFile) {
+                showMessage('Бүх шаардлагатай мэдээллээ бөглөнө үү.');
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append('name', name);
+            fd.append('price', price);
+            fd.append('desc', desc);
+            fd.append('category_id', categoryId);
+            fd.append('image', imageFile);
+
+            saveBtn.disabled = true;
+            saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/products`, {
+                    method: 'POST',
+                    body: fd
+                });
+
+                if (!res.ok) {
+                    const text = await res.text();
+                    console.error(text);
+                    throw new Error('Хадгалах үед сервер алдаа өглөө.');
+                }
+
+                showMessage('Амжилттай хадгаллаа!', true);
+                fForm.reset();
+                catSelect.value = '';
+            } catch (err) {
+                console.error(err);
+                showMessage('Хадгалах үед алдаа гарлаа.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        loadCats();
+    </script>
+</body>
+</html>
